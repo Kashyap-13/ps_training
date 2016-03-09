@@ -1,7 +1,6 @@
 
 body{
 	margin:0 auto;
-	//margin:0px 80px 0px 80px;
 	padding:0;
   font-family:'Roboto', sans-serif;
   color:#333;
@@ -20,6 +19,7 @@ body{
 .container{
 	width:100%;
 	height:100%;
+	margin:0 auto;
 }
 .header{
 	width:100%;
@@ -179,6 +179,8 @@ body{
 }
 .dots-div{
 	height:250px;
+	margin:0 auto;
+	width:500px;
 }
 .dots-lable{
 	text-transform:uppercase;
@@ -189,7 +191,6 @@ body{
 }
 .dots{
 	height:130px;
-	padding:10px 0px 0px 400px;
 }
 .first-dot, .middle-dot, .last-dot,.banner-dot{
 	float:left;
