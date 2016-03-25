@@ -1,10 +1,25 @@
 <?php
-  include('includes/session.php');
-
+  include('config/init.php');
+  include($siteConfig['include_dir'] . 'session.php');
+  
   if (isset($_SESSION['user']))
   {   
     $user = $_SESSION['user'];
   }
+  if(isset($_SESSION['success']))
+  {
+    $success_message1 = $_SESSION['success'];
+    unset($_SESSION['success']);
+  }
+  if($_SESSION['profile_success'])
+  {
+    $success_message2 = $_SESSION['profile_success'];
+    unset($_SESSION['profile_success']);
+  }
+  // if(!isset($_SESSION['user']))
+  // {
+  //   header('location:index.php');
+  // }
   $error_message = array();
   if (isset($_SESSION['errors']) && count($_SESSION['errors']) > 0)
   {
@@ -13,24 +28,17 @@
     }
     unset($_SESSION['errors']);
   }
-  include('includes/header.php');
-
+  include($siteConfig['config_dir'] . 'user_access.php');
+  include($siteConfig['include_dir'] . 'header.php');
+  
   $result = get_rows("select first_name, last_name, email_id, user_name, password, address_line1, address_line2, city, zipcode, state, country, profile_picture from user_data where id = ?", array($user));
   $row = array();
   foreach ($result as $value) {
     $row = $value;
   }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>User Profile</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-</head>
 <body>
-  <?php include('includes/menu.php'); ?>
+  <?php include($siteConfig['include_dir'] . 'menu.php'); ?>
   <!-- Start of container -->
   <div class="container">
     <!-- Start of row -->
@@ -43,23 +51,25 @@
       <div class="picture-container">
         <img src="<?php echo $row['profile_picture']; ?>" alt="No picture" width="200px" height="200px">
       </div>
-      <form method="post" action="controllers/profile_control.php" enctype="multipart/form-data">
+      <form method="post" action="<?php echo $siteConfig['controller_dir']; ?>profile_control.php" enctype="multipart/form-data" onsubmit="return validate_file()">
         <div class="profile_file">
-          <input type="file" class="btn" name="fileToUpload" id="fileToUpload">
+          <input type="file" class="btn" name="fileToUpload" id="fileToUpload" >
           <button type="submit" class="btn btn-primary" name="upload" id="upload">Upload photo</button>
         </div>
-        <span><?php if(isset($error_message['file_error'])){ echo $error_message['file_error']; }?></span>
-        <span><?php if(isset($error_message['file_size'])){ echo $error_message['file_size']; }?></span>
-        <span><?php if(isset($error_message['file_invalid'])){ echo $error_message['file_invalid']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_error'])){ echo $error_message['file_error']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_size'])){ echo $error_message['file_size']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_invalid'])){ echo $error_message['file_invalid']; }?></span>
+        <span class="text-center text-success"><?php if(isset($success_message2)){echo $success_message2;} ?></span>
       </form>
       </div>
       <?php
         if (isset($_SESSION['user']))
         {  
       ?>
+      <span class="text-center text-success"><?php if(isset($success_message1)){echo $success_message1;} ?></span>
       <div class="col-md-6 form-style">
-        <form method="post" action="controllers/profile_control.php" class="form-horizontal">
-          <!-- start of form-group for First Name-->
+        <form method="post" action="<?php echo $siteConfig['controller_dir']; ?>profile_control.php" class="form-horizontal" onsubmit="return validate_user_form()">
+        <!-- start of form-group for First Name-->
           <div class="form-group">
             <label for="first_name" class="col-sm-3 control-label">First Name</label>
             <div class="col-sm-6">

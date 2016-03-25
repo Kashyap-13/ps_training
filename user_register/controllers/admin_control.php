@@ -1,14 +1,23 @@
 <?php
-	include('../includes/session.php');
-	include('../config/database.php');
-	if(isset($_SESSION['admin'])
+	include('../config/init.php');
+	include('../' . $siteConfig['include_dir'] . 'session.php');
+	include('../' . $siteConfig['config_dir'] . 'database.php');
+	include('../' . $siteConfig['config_dir'] . 'user_access.php');
+	if(isset($_SESSION['admin']))
 	{
 		$id= $_GET['id'];
-		$result = execute_query("DELETE FROM user_data where id = ?",array($id));
-		header('location: ../manage_user.php');
+		if($id > 1)
+		{
+			$result = execute_query("DELETE FROM user_data where id = ?",array($id));
+			header('location:' . $siteConfig['site_url'] . 'manage_user.php');
+		}
+		else
+		{
+			header('location:' . $siteConfig['site_url'] . 'index.php');
+		}
 	}
 	else
 	{
-		header('location:login.php');
+		header('location:' . $siteConfig['site_url'] . 'index.php');
 	}
 ?>

@@ -19,10 +19,10 @@ function get_row($query, $parameters = array())
 }
 function get_rows($query, $parameters = array())
 {
-	global $mysql_connection;
+	global $mysql_connection;	
 	$statement = $mysql_connection->prepare($query);
 	$statement->execute($parameters);
-	$result = $statement->fetchAll();
+	$result = $statement->fetchAll();		
 	return $result;
 }
 ?>

@@ -1,14 +1,13 @@
 <?php
-	include('../includes/session.php');
-	include('../config/database.php');
+	include('../config/init.php');
+	include('../' . $siteConfig['include_dir'] . 'session.php');
+	include('../' . $siteConfig['config_dir'] . 'database.php');
 	
 	foreach ($_POST as $key => $value)
 	{
 		$$key = trim($value);	
 	}
-	
 	$_SESSION['errors'] = array();
-	
 	if (empty($user_name))
 	{
 		$_SESSION['errors']['user_name'] = "Please enter user name";	
@@ -19,37 +18,34 @@
 	}
 	if (count($_SESSION['errors']) == 0)
 	{	
-		$salt = "abs$rg$@^$29f146546fd&(!)!#@";
-		$password = md5(sha1(md5($_POST['password'] . $salt)));
-		$result = get_rows("select id, user_role, first_name, user_name, email_id, password from user_data"); 
-		$flag = 1;
-		foreach ($result as $value) 
+		$password1 = md5(sha1(md5($_POST['password'] . $salt)));
+		$result = get_row("select id, user_role , first_name from user_data where (user_name = ? or email_id = ?) and password = ?",array($user_name, $user_name, $password1)); 
+		//$flag = 1;
+		//print_r($result);
+		if($result != null)
 		{
-			if(($value['user_name'] == $user_name || $value['email_id'] == $user_name) && $value['password'] == $password)
-			{	
-				if($value['id'] == 1 && $value['user_role'] == 1)
-				{
-					$_SESSION['admin'] = $value['id'];
-					$_SESSION['fname'] = $value['first_name'];
-					header('location: ../manage_user.php');
-				}
-				else
-				{
-					$_SESSION['user'] = $value['id'];
-					$_SESSION['fname'] = $value['first_name'];
-					header('location: ../myprofile.php');
-				}
-				$flag = 0;
+			if($result['user_role'] == 1)
+			{
+				$_SESSION['admin'] = $result['id'];
+				$_SESSION['fname'] = $result['first_name'];
+				header('location:'. $siteConfig['site_url'] . 'manage_user.php');
+			}
+			else if($result['user_role'] == 2)
+			{
+				$_SESSION['user'] = $result['id'];
+				$_SESSION['fname'] = $result['first_name'];
+				//header('location: ../myprofile.php');
+				header('location:' . $siteConfig['site_url'] . 'myprofile.php');
 			}
 		}
-		if($flag)
+		else
 		{
 			$_SESSION['errors']['login_fail'] = "Invalid username or password";
-			header('location: ../login.php');
+			header('location:' . $siteConfig['site_url'] . 'index.php');
 		}
 	}
 	else
 	{
-		header('location: ../login.php');
+		header('location:' . $siteConfig['site_url'] . 'index.php');
 	}
 ?>	

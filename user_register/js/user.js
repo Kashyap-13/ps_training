@@ -2,108 +2,111 @@ function comfirm_delete()
 {
     return confirm("Are you sure you want to delete");
 } 
-function validate_fname()
+function validate_file()
+{
+  var pic_file = document.getElementById("fileToUpload");
+  if(pic_file.value == "")
+  {
+    alert("Please select file first");
+    return false;
+  }
+}
+function validate_login_form()
+{
+  var uname = document.getElementById("user_name");
+  var password = document.getElementById("password");
+
+  if(uname.value == "")
+  {
+    alert('Please enter user name');
+    uname.focus();
+    return false;
+  }
+  if(password.value == "")
+  {
+    alert("Please enter password");
+    password.focus();
+    return false;
+  }
+}
+function validate_form()
 {
   var fname = document.getElementById("first_name");
+  var lname = document.getElementById("last_name");
+  var email = document.getElementById("email_id");
+  var uname = document.getElementById("user_name");
+  var password = document.getElementById("password");
+  var confirmp = document.getElementById("confirm_password");
+  var address1 = document.getElementById("address_line1");
+  var address2 = document.getElementById("address_line2");
+  var city = document.getElementById("city");
+  var zipcode = document.getElementById("zipcode");
+  var state = document.getElementById("state");
+
   var letters = /^[A-Za-z]+$/;
+  var alphaExp = /^[0-9a-zA-Z]+$/;
+  var numbers = /^\d{6}$/;
+
   if(!fname.value.match(letters))
   {
     alert('First name must have alphabet characters only');  
     fname.focus();  
     return false; 
   }
-}
-function validate_lname()
-{
-  var lname = document.getElementById("last_name");
-  var letters = /^[A-Za-z]+$/;
   if(!lname.value.match(letters))
   {
     alert('Last name must have alphabet characters only');  
     lname.focus();  
     return false; 
   }
-}
-function validate_uname()
-{
-  var uname = document.getElementById("user_name");
-  var alphaExp = /^[0-9a-zA-Z]+$/; 
   if(!uname.value.match(alphaExp))
   {
     alert('Enter valid user name');
     uname.focus();
     return false;
   }
-}
-function validate_password()
-{
-  var password = document.getElementById("password");
-  if(password.value == "")
+  if(email.value == "")
   {
-    alert('Enter pasword');
-    password.focus();
-    return false; 
+    alert('Enter Email');
+    email.focus();
+    return false;
   }
-}
-function validate_confirmp()
-{
-  var password = document.getElementById("password").value;
-  var confirmp= document.getElementById("confirm_password").value;
-  if(password != confirmp)
+  if(password.value.length < 6)
   {
-    alert("Password doesn't match");
+    alert("Password must be of 6 digit");
     password.focus();
     return false;
   }
-}
-function validate_address1()
-{
-  var address1 = document.getElementById("address_line1");
-  var letters = /^[0-9a-zA-Z]+$/; 
-  if(!address1.value.match(letters))
+  if(password.value != confirmp.value)
   {
-    alert('User address must have alphanumeric characters only');  
+    alert("Password doesn't match");
+    confirmp.focus();
+    return false;
+  }
+  if(address1.value == "")
+  {
+    alert('Enter address line1');  
     address1.focus();  
     return false; 
   }
-}
-function validate_address2()
-{
-  var address2 = document.getElementById("address_line2");
-  var letters = /^[0-9a-zA-Z]+$/; 
-  if(!address1.value.match(letters))
+  if(address2.value == "")
   {
-    alert('User address must have alphanumeric characters only');  
+    alert('Enter address line2');  
     address2.focus();  
     return false; 
   }
-}
-function validate_city()
-{
-  var city = document.getElementById("city");
-  var letters = /^[A-Za-z]+$/;
   if(!city.value.match(letters))
   {
     alert('Invalid city name');  
     city.focus();  
     return false; 
   }
-}
-function validate_zipcode()
-{
-  var zipcode = document.getElementById("zipcode");  
-  var numbers = /^[0-9]+$/;  
   if(!zipcode.value.match(numbers))  
   {  
     alert('ZIP code must have numeric characters only');  
     zipcode.focus();  
     return false;   
-  }        
-}  
-function validate_state()
-{
-  var state = document.getElementById("state");
-  var letters = /^[A-Za-z]+$/;
+  }
   if(!state.value.match(letters))
   {
     alert('Invalid state name');  
@@ -111,4 +114,83 @@ function validate_state()
     return false; 
   }
 }
+function validate_user_form()
+{
+  var fname = document.getElementById("first_name");
+  var lname = document.getElementById("last_name");
+  var uname = document.getElementById("user_name");
+  var password = document.getElementById("password");
+  var address1 = document.getElementById("address_line1");
+  var address2 = document.getElementById("address_line2");
+  var city = document.getElementById("city");
+  var zipcode = document.getElementById("zipcode");
+  var state = document.getElementById("state");
 
+  var letters = /^[A-Za-z]+$/;
+  var alphaExp = /^[0-9a-zA-Z]+$/;
+  var numbers = /^\d{6}$/;
+
+  if(!fname.value.match(letters))
+  {
+    alert('First name must have alphabet characters only');  
+    fname.focus();  
+    return false; 
+  }
+  if(!lname.value.match(letters))
+  {
+    alert('Last name must have alphabet characters only');  
+    lname.focus();  
+    return false; 
+  }
+  if(!uname.value.match(alphaExp))
+  {
+    alert('Enter valid user name');
+    uname.focus();
+    return false;
+  }
+  if(password.value != "")
+  {
+    if(password.value.length < 6)
+    {
+      alert("Password must be of 6 digit");
+      password.focus();
+      return false;
+    }
+  }
+  if(password.value != confirmp.value)
+  {
+    alert("Password doesn't match");
+    confirmp.focus();
+    return false;
+  }
+  if(address1.value == "")
+  {
+    alert('Enter address line1');  
+    address1.focus();  
+    return false; 
+  }
+  if(address2.value == "")
+  {
+    alert('Enter address line2');  
+    address2.focus();  
+    return false; 
+  }
+  if(!city.value.match(letters))
+  {
+    alert('Invalid city name');  
+    city.focus();  
+    return false; 
+  }
+  if(!zipcode.value.match(numbers))  
+  {  
+    alert('ZIP code must have 6 numeric characters');  
+    zipcode.focus();  
+    return false;   
+  }
+  if(!state.value.match(letters))
+  {
+    alert('Invalid state name');  
+    state.focus();  
+    return false; 
+  }
+}

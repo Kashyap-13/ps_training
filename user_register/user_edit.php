@@ -1,16 +1,14 @@
 <?php
-  include('includes/session.php');
-  include('config/database.php');
-  if(!isset($_SESSION['admin']))
+  include('config/init.php');
+  include($siteConfig['include_dir'].'session.php');
+  // if(!isset($_SESSION['admin']))
+  // {
+  //    header('location:index.php');
+  // }
+  if($_SESSION['profile_success'])
   {
-     header('location:login.php');
-  }
-  $id= $_GET['id'];
-  $result = get_rows("select first_name, last_name, email_id, user_name, password, address_line1, address_line2, city, zipcode, state, country, profile_picture from user_data where id = ?", array($id));
-  $row = array();
-  foreach ($result as $value) 
-  {
-    $row = $value;
+    $success_message2 = $_SESSION['profile_success'];
+    unset($_SESSION['profile_success']);
   }
   $error_message = array();
   if (isset($_SESSION['errors']) && count($_SESSION['errors']) > 0)
@@ -21,17 +19,18 @@
     }
     unset($_SESSION['errors']);
   }
+  include($siteConfig['config_dir'] . 'user_access.php');
+  include($siteConfig['include_dir'] . 'header.php');
+  $id= $_GET['id'];
+  $result = get_rows("select first_name, last_name, email_id, user_name, password, address_line1, address_line2, city, zipcode, state, country, profile_picture from user_data where id = ?", array($id));
+  $row = array();
+  foreach ($result as $value) 
+  {
+    $row = $value;
+  }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>User Profile</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-</head>
 <body>
-  <?php include('includes/menu.php'); ?>
+  <?php include($siteConfig['include_dir'] . 'menu.php'); ?>
   <!-- Start of container -->
   <div class="container">
     <!-- Start of row -->
@@ -44,19 +43,21 @@
       <div class="picture-container">
         <img src="<?php echo $row['profile_picture']; ?>" alt="No picture" width="200px" height="200px">
       </div>
-      <form method="post" action="controllers/admin_profile_control.php" enctype="multipart/form-data">
+      <form method="post" action="<?php echo $siteConfig['controller_dir']; ?>admin_profile_control.php" enctype="multipart/form-data" onsubmit="return validate_file()">
         <div class="profile_file">
           <input type="file" class="btn" name="fileToUpload" id="fileToUpload">
           <input type="hidden" class="form-control" id="user_id" name="user_id" value= <?php echo $id?> >
           <button type="submit" class="btn btn-primary" name="upload" id="upload">Upload photo</button>
         </div>
-        <span><?php if(isset($error_message['file_error'])){ echo $error_message['file_error']; }?></span>
-        <span><?php if(isset($error_message['file_size'])){ echo $error_message['file_size']; }?></span>
-        <span><?php if(isset($error_message['file_invalid'])){ echo $error_message['file_invalid']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_error'])){ echo $error_message['file_error']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_size'])){ echo $error_message['file_size']; }?></span>
+        <span class="text-danger"><?php if(isset($error_message['file_invalid'])){ echo $error_message['file_invalid']; }?></span>
+        <span class="text-center text-success"><?php if(isset($success_message2)){echo $success_message2;} ?></span>
       </form>
       </div>
       <div class="col-md-6 form-style">
-        <form method="post" action="controllers/admin_profile_control.php" class="form-horizontal">
+        <form method="post" action="<?php echo $siteConfig['controller_dir']; ?>admin_profile_control.php" class="form-horizontal" onsubmit="return validate_user_form()">
+          <span class="col-sm-12 text-center text-danger"><?php if(isset($error_message['dublicate_user'])){ echo $error_message['dublicate_user']; }?></span>
           <!-- start of form-group for First Name-->
           <div class="form-group">
             <label for="first_name" class="col-sm-3 control-label">First Name</label>
